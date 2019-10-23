@@ -13,7 +13,7 @@ class NegociacaoController{
     this._negociacoesView = new NegociacoesView('#negociacoes');
     
     //atualizando a view
-    this._negociacoesView.update();
+    this._negociacoesView.update(this._negociacoes);
 
   }
 
@@ -22,7 +22,7 @@ class NegociacaoController{
     event.preventDefault();
     
     this._negociacoes.adiciona(this._criaNegociacao());
-    
+    this._negociacoesView.update(this._negociacoes);
     this._limpaFormulario();
 
   }
