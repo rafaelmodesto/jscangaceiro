@@ -15,6 +15,12 @@ class NegociacaoController{
     //atualizando a view
     this._negociacoesView.update(this._negociacoes);
 
+    //instanciando o modelo
+    this._mensagem = new Mensagem();
+
+    this._mensagemView = new MensagemView('#mensagemView');
+    this._mensagemView.update(this._mensagem);
+
   }
 
   adiciona(event){
@@ -22,7 +28,12 @@ class NegociacaoController{
     event.preventDefault();
     
     this._negociacoes.adiciona(this._criaNegociacao());
+    this._mensagem.texto = 'Negociação adicionada com sucesso!';
     this._negociacoesView.update(this._negociacoes);
+
+    //atualiza a view com o texto da mensagem que acabamos de atribuir
+    this._mensagemView.update(this._mensagem);
+    
     this._limpaFormulario();
 
   }
