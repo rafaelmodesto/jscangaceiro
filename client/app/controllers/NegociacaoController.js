@@ -9,7 +9,11 @@ class NegociacaoController{
     this._inputData       = $('#data');
     this._inputQuantidade = $('#quantidade');
     this._inputValor      = $('#valor');
-    this._negociacoes     = new Negociacoes();
+
+    this._negociacoes     = new Negociacoes(function(model) {
+      this._negociacoesView.update(model);
+    });
+    
     this._negociacoesView = new NegociacoesView('#negociacoes');
     
     //atualizando a view
@@ -53,6 +57,12 @@ class NegociacaoController{
       parseFloat(this._inputValor.value)
     );
   }
-  
+
+  apaga() {
+    this._negociacoes.esvazia();
+    this._negociacoesView.update(this._negociacoes);
+    this._mensagem.texto = 'Negociações apagadas com sucesso';
+    this._mensagemView.update(this._mensagem);
+  }
   
 }

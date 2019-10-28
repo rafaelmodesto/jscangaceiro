@@ -5,7 +5,7 @@ class View {
   }
 
   update(model) {
-    this._elemento.innerHTML = this.template(modal);
+    this._elemento.innerHTML = this.template(model);
   }
 
   template(model) {
