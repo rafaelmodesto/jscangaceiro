@@ -10,14 +10,21 @@ class NegociacaoController{
     this._inputQuantidade = $('#quantidade');
     this._inputValor      = $('#valor');
 
-    //criando o proxy com auxílio da factory
-    this._negociacoes = ProxyFactory.create(
+    //criando o proxy com auxílio do Bind
+    this._negociacoes = new Bind(
       new Negociacoes(),
-      ['adiciona', 'esvazia'],
-      model => this._negociacoesView.update(model)
+      new NegociacoesView('#negociacoes'),
+      'adiciona', 'esvazia'
     );
-
-    this._negociacoesView = new NegociacoesView('#negociacoes');
+    
+    this._mensagem = new Bind(
+      new Mensagem(),
+      new MensagemView('#mensagemView'),
+      'texto'
+    );  
+    
+    //apagar
+    /*this._negociacoesView = new NegociacoesView('#negociacoes');
     
     //atualizando a view
     this._negociacoesView.update(this._negociacoes);
@@ -28,11 +35,8 @@ class NegociacaoController{
       model => this._mensagemView.update(model)
     );
     
-    /*//instanciando o modelo
-    this._mensagem = new Mensagem();*/
-
     this._mensagemView = new MensagemView('#mensagemView');
-    this._mensagemView.update(this._mensagem);
+    this._mensagemView.update(this._mensagem);*/
 
   }
 
