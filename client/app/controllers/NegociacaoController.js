@@ -41,14 +41,26 @@ class NegociacaoController{
   }
 
   adiciona(event){
+
+    try{
     // cancelando  a submissão do formulário
     event.preventDefault();
     
     this._negociacoes.adiciona(this._criaNegociacao());
     this._mensagem.texto = 'Negociação adicionada com sucesso!';
-    
     this._limpaFormulario();
 
+    } catch(err) {
+        console.log(err);
+        console.log(err.stack);
+
+        if(err instanceof DataInvalidaException) {
+          this._mensagem.texto = err.message;
+        } else {
+          //mensagem generica para qualquer problema diferente que aconteça
+          this._mensagem.texto = 'Um erro não esperado aconteceu. Entre em contato com o suporte.';
+        }        
+    }
   }
   
   _limpaFormulario() {
