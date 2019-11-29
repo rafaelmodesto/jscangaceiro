@@ -22,21 +22,6 @@ class NegociacaoController{
       new MensagemView('#mensagemView'),
       'texto'
     );  
-    
-    //apagar
-    /*this._negociacoesView = new NegociacoesView('#negociacoes');
-    
-    //atualizando a view
-    this._negociacoesView.update(this._negociacoes);
-
-    this._mensagem = ProxyFactory.create(
-      new MensagemView(),
-      ['texto'],
-      model => this._mensagemView.update(model)
-    );
-    
-    this._mensagemView = new MensagemView('#mensagemView');
-    this._mensagemView.update(this._mensagem);*/
 
   }
 
@@ -84,4 +69,28 @@ class NegociacaoController{
     this._mensagem.texto = 'Negociações apagadas com sucesso';
   }
   
+  importaNegociacoes() {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', 'negociacoes/semana');
+
+    xhr.onreadystatechange = () => {
+      if(xhr.readyState == 4){
+        if(xhr.status == 200){
+          //realizando o JSON.parse para converter os dados de string para objeto para manipular mais facilmente
+          //recebendo dados retornados da requisição
+          JSON
+            .parse(xhr.responseText)
+            .map(objeto => new Negociacao(new Date(objeto.data), objeto.quantidade, objeto.valor))
+            .forEach(negociacao => this._negociacoes.adiciona(negociacao));
+          
+          this._mensagem.texto = 'Negociações importadas com sucesso!';
+        } else {
+            console.log(xhr.responseText);
+            console.log('Não foi possível obter as negociações da semana.');
+        }
+      }
+    };
+    //executa a requisição configurada
+    xhr.send();
+  }
 }
