@@ -72,9 +72,12 @@ class NegociacaoController{
   }
   
   importaNegociacoes() {
+
+    const negociacoes = [];
+
     this._service
       .obterNegociacoesDaSemana()
-      .then( semana => {
+      .then(semana => {
         //usando spread operator(...)
         negociacoes.push(...semana);
 
