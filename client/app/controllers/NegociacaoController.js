@@ -72,8 +72,36 @@ class NegociacaoController{
   }
   
   importaNegociacoes() {
+    this._service
+      .obtemNegociacoesDoPeriodo()
+      .then(negociacoes => {
+        negociacoes
+        .filter(novaNegociacao => !this._negociacoes.paraArray().some(negociacaoExistente =>
+          novaNegociacao.equals(negociacaoExistente)))
+        .forEach(negociacao => this._negociacoes.adiciona(negociacao));
+        this._mensagem.texto = 'Negociações do período importadas com sucesso!';
+      })
+      .catch(err => this._mensagem.texto = err);
+  }
 
-    const negociacoes = [];
+   
+   
+   
+    /* //resolve todas as promises em paralelo
+    Promise.all([
+      this._service.obterNegociacoesDaSemana(),
+      this._service.obtemNegociacoesDaSemanaAnterior(),
+      this._service.obtemNegociacoesDaSemanaRetrasada()
+    ])
+    .then(periodo => {
+      periodo
+        .reduce((novoArray, item) => novoArray.concat(item), [])
+        .forEach(negociacao => this._negociacoes.adiciona(negociacao));
+      this._mensagem.texto = 'Negociações importadas com sucesso!';
+    }) 
+    .catch(err => this._mensagem.texto = err); */
+    
+    /*const negociacoes = [];
 
     this._service
       .obterNegociacoesDaSemana()
@@ -85,9 +113,12 @@ class NegociacaoController{
       })
       .then(anterior => {
         negociacoes.push(...anterior);
+        return this._service.obtemNegociacoesDaSemanaRetrasada()
+      })
+      .then(retrasada => {
+        negociacoes.push(...retrasada);
         negociacoes.forEach(negociacao => this._negociacoes.adiciona(negociacao));
         this._mensagem.texto = 'Negociações importadas com sucesso!';
       })
-      .catch(err => this._mensagem.texto = err);
-  }
+      .catch(err => this._mensagem.texto = err);*/
 }
