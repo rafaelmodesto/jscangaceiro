@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">  
+  <title>Aprendendo IndexedDB</title>
+</head>
+<body>
+  <script>
+    //precisa ser LET para aceitar uma nova atribuição
+    let connection = null;
+    
+    //abrindo conexão com indexedDB
+    const openRequest = indexedDB.open("jscangaceiro", 2);
+
+    /* Toda vez que realizamos uma requisição de abertura,
+    precisaremos lidar com uma tríade de eventos, são eles: 
+    1. onupgradeneeded
+    2. onsuccess
+    3. onerror */
+
+    //lindando com a triade de eventos
+    openRequest.onupgradeneeded = e => {
+      console.log('Cria ou altera um banco já existente');
+
+      //obtendo a conexão
+      connection = e.target.result;
+
+      if(connection.objectStoreNames.contains('negociacoes')) {
+        connection.deleteObjectStore('negociacoes');
+      }
+
+      connection.createObjectStore('negociacoes', { autoIncrement: true});
+    };
+
+    openRequest.onsuccess = e => {
+      console.log('Conexão obtida com sucesso!');
+      
+      // e.target.result é uma instância de IDBDatabase
+
+     connection = e.target.result;
+    };
+
+    openRequest.onerror = e => {
+      console.log(e.target.error);
+    };
+
+    function adiciona() {
+      const negociacao = new Negociacao(new Date(), 200, 1);
+       
+      //encadeando as chamadas /depois
+      const request = connection
+        .transaction(['negociacoes'],'readwrite')
+        .objectStore('negociacoes')
+        .add(negociacao);
+      
+      //chamadas sem encadeamento /antes
+      /*const transaction = connection.transaction(['negociacoes'],'readwrite');
+      const store = transaction.objectStore('negociacoes');
+      //através da store, requisitamos uma inclusão
+      const request = store.add(negociacao);*/
+
+      request.onsuccess = e => console.log('Negociação salva com sucesso!');
+
+      request.onerror = e => console.log('Não foi possível salvar a negociação');
+    
+    }
+
+    function listaTodos() {
+
+      const negociacoes = [];
+
+      const cursor = connection
+        .transaction(['negociacoes'],'readwrite')
+        .objectStore('negociacoes')
+        .openCursor();
+
+      cursor.onsuccess = e => {
+        // objeto ponteiro para uma negociação
+        const atual = e.target.result;
+
+        //se for diferente de null, é pq ainda há dado
+        if(atual) {
+          //cria uma nova instância antes de adicionar no array
+          const negociacao = new Negociacao(
+            atual.value._data,
+            atual.value._quantidade,
+            atual.value._valor);
+    
+          //atual.value guarda os dados da negociação
+          negociacoes.push(atual.value);
+          //vai para a próxima posição chamando onsuccess novamente
+          atual.continue();
+        } else {
+          //quando atual for null, é pq há mais dados 
+          //imprimimos no console a lista de negociações
+          console.log(negociacoes);
+        }
+      };
+
+      //error.name, para ficar mais sucinta a informação
+      cursor.onerror = e => console.log('Error: ' + e.target.error.name);
+    }
+
+  </script>
+  <script src="app/domain/negociacao/Negociacao.js"></script>
+</body>
+</html>
