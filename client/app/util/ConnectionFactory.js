@@ -4,6 +4,8 @@ const ConnectionFactory = (() => {
   //Começa sem conexão
   let connection = null;
 
+  let close = null;
+
   return class ConnectionFactory{
 
     constructor() {
@@ -18,13 +20,21 @@ const ConnectionFactory = (() => {
         const openRequest = indexedDB.open('jscangaceiro', 2);
 
         openRequest.onupgradeneeded = e => {
-          /*stores.forEach(store => {*/
-            ConnectionFactory._createStores(e.target.result);
-          /*});*/  
+          
+          ConnectionFactory._createStores(e.target.result);
+
         };
 
         openRequest.onsuccess = e => {
-          resolve(e.target.result);
+          
+          connection = e.target.result;
+
+          close = connection.close.bind(connection);
+
+          connection.close = () => {
+            throw new Error('Você não pode fechar diretamente a conexão');
+          };
+          resolve(connection);
         };
 
         openRequest.onerror = e => {
@@ -40,8 +50,14 @@ const ConnectionFactory = (() => {
         if(connection.objectStoreNames.contains(store))
             connection.deleteObjectStore(store);
 
-        connection.createObjectStores(store, { autoIncrement: true});
+        connection.createObjectStore(store, { autoIncrement: true });
       });
+    }
+
+    static closeConnection() {
+      if(connection) {
+        close();
+      }
     }
   }
 })();
