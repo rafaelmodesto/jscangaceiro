@@ -1,4 +1,4 @@
-SytemJS.register(['./negociacao/Negociacao.js', './negociacao/NegociacaoDao.js', './negociacao/NegociacaoService.js', './negociacao/Negociacoes.js'], function (_export, _context) {
+System.register(['./negociacao/Negociacao.js', './negociacao/NegociacaoDao.js', './negociacao/NegociacaoService.js', './negociacao/Negociacoes.js'], function (_export, _context) {
   "use strict";
 
   return {

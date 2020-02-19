@@ -2,8 +2,10 @@ System.register(['./ConnectionFactory.js', '../domain/negociacao/NegociacaoDao.j
   "use strict";
 
   var ConnectionFactory, NegociacaoDao;
-  function getNegociacaoDao() {
-    return ConnectionFactory.getConnection().then(conn => new NegociacaoDao(conn));
+  async function getNegociacaoDao() {
+
+    let conn = await ConnectionFactory.getConnection();
+    return new NegociacaoDao(conn);
   }
 
   _export('getNegociacaoDao', getNegociacaoDao);

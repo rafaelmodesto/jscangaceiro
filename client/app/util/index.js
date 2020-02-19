@@ -1,4 +1,4 @@
-SytemJS.register(['./Bind.js', './ConnectionFactory.js', './DaoFactory.js', './ApplicationException.js', './HttpService.js', './ProxyFactory.js'], function (_export, _context) {
+System.register(['./Bind.js', './ConnectionFactory.js', './DaoFactory.js', './ApplicationException.js', './HttpService.js', './ProxyFactory.js'], function (_export, _context) {
   "use strict";
 
   return {

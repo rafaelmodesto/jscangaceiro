@@ -1,5 +1,5 @@
 export class Negociacoes {
-  constructor(armadilha) {
+  constructor() {
     this._negociacoes = [];
 
     //congelando instância, nao sendo possível alterá-la

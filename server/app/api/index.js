@@ -55,6 +55,4 @@ api.cadastraNegociacao = function(req, res) {
    res.status(200).json("Negociação recebida");
 };
 
-
-
 module.exports = api;

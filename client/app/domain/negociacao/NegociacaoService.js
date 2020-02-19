@@ -34,11 +34,15 @@ System.register(['../../util/HttpService.js', './Negociacao.js'], function (_exp
           });
         }
 
-        obtemNegociacoesDoPeriodo() {
-          return Promise.all([this.obterNegociacoesDaSemana(), this.obtemNegociacoesDaSemanaAnterior(), this.obtemNegociacoesDaSemanaRetrasada()]).then(periodo => periodo.reduce((novoArray, item) => novoArray.concat(item), []).sort((a, b) => b.data.getTime() - a.data.getTime())).catch(err => {
+        async obtemNegociacoesDoPeriodo() {
+
+          try {
+            let periodo = await Promise.all([this.obterNegociacoesDaSemana(), this.obtemNegociacoesDaSemanaAnterior(), this.obtemNegociacoesDaSemanaRetrasada()]);
+            return periodo.reduce((novoArray, item) => novoArray.concat(item), []).sort((a, b) => b.data.getTime() - a.data.getTime());
+          } catch (err) {
             console.log(err);
             throw new Error('Não foi possível obter as negociações do período.');
-          });
+          };
         }
       }
 

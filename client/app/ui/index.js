@@ -1,4 +1,4 @@
-SytemJS.register(['./views/MensagemView.js', './views/NegociacoesView.js', './views/View.js', './models/Mensagem.js', './converters/DataInvalidaException.js', './converters/DateConverter.js'], function (_export, _context) {
+System.register(['./views/MensagemView.js', './views/NegociacoesView.js', './views/View.js', './models/Mensagem.js', './converters/DataInvalidaException.js', './converters/DateConverter.js'], function (_export, _context) {
   "use strict";
 
   return {
