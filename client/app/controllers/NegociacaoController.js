@@ -1,7 +1,37 @@
 System.register(['../domain/index.js', '../ui/index.js', '../util/index.js'], function (_export, _context) {
   "use strict";
 
-  var Negociacoes, NegociacaoService, Negociacao, NegociacoesView, MensagemView, Mensagem, DataInvalidaException, DateConverter, getNegociacaoDao, Bind;
+  var Negociacoes, NegociacaoService, Negociacao, NegociacoesView, MensagemView, Mensagem, DateConverter, getNegociacaoDao, Bind, getExceptionMessage;
+
+  function _asyncToGenerator(fn) {
+    return function () {
+      var gen = fn.apply(this, arguments);
+      return new Promise(function (resolve, reject) {
+        function step(key, arg) {
+          try {
+            var info = gen[key](arg);
+            var value = info.value;
+          } catch (error) {
+            reject(error);
+            return;
+          }
+
+          if (info.done) {
+            resolve(value);
+          } else {
+            return Promise.resolve(value).then(function (value) {
+              step("next", value);
+            }, function (err) {
+              step("throw", err);
+            });
+          }
+        }
+
+        return step("next");
+      });
+    };
+  }
+
   return {
     setters: [function (_domainIndexJs) {
       Negociacoes = _domainIndexJs.Negociacoes;
@@ -11,11 +41,11 @@ System.register(['../domain/index.js', '../ui/index.js', '../util/index.js'], fu
       NegociacoesView = _uiIndexJs.NegociacoesView;
       MensagemView = _uiIndexJs.MensagemView;
       Mensagem = _uiIndexJs.Mensagem;
-      DataInvalidaException = _uiIndexJs.DataInvalidaException;
       DateConverter = _uiIndexJs.DateConverter;
     }, function (_utilIndexJs) {
       getNegociacaoDao = _utilIndexJs.getNegociacaoDao;
       Bind = _utilIndexJs.Bind;
+      getExceptionMessage = _utilIndexJs.getExceptionMessage;
     }],
     execute: function () {
       //'../domain/index.js';
@@ -41,32 +71,42 @@ System.register(['../domain/index.js', '../ui/index.js', '../util/index.js'], fu
           this._init();
         }
 
-        async _init() {
-          try {
-            const dao = await getNegociacaoDao();
-            const negociacoes = await dao.listaTodos();
-            negociacoes.forEach(negociacao => this._negociacoes.adiciona(negociacao));
-          } catch (err) {
+        _init() {
+          var _this = this;
 
-            this._mensagem.texto = err.message;
-          }
+          return _asyncToGenerator(function* () {
+            try {
+              const dao = yield getNegociacaoDao();
+              const negociacoes = yield dao.listaTodos();
+              negociacoes.forEach(function (negociacao) {
+                return _this._negociacoes.adiciona(negociacao);
+              });
+            } catch (err) {
+
+              _this._mensagem.texto = getExceptionMessage(err);
+            }
+          })();
         }
 
-        async adiciona(event) {
+        adiciona(event) {
+          var _this2 = this;
 
-          try {
-            // cancelando  a submissão do formulário
-            event.preventDefault();
-            const negociacao = this._criaNegociacao();
+          return _asyncToGenerator(function* () {
 
-            const dao = await getNegociacaoDao();
-            await dao.adiciona(negociacao);
-            this._negociacoes.adiciona(negociacao);
-            this._mensagem.texto = 'Negociação adicionada com sucesso!';
-            this._limpaFormulario();
-          } catch (err) {
-            this._mensagem.texto = err.message;
-          }
+            try {
+              // cancelando  a submissão do formulário
+              event.preventDefault();
+              const negociacao = _this2._criaNegociacao();
+
+              const dao = yield getNegociacaoDao();
+              yield dao.adiciona(negociacao);
+              _this2._negociacoes.adiciona(negociacao);
+              _this2._mensagem.texto = 'Negociação adicionada com sucesso!';
+              _this2._limpaFormulario();
+            } catch (err) {
+              _this2._mensagem.texto = err.message;
+            }
+          })();
         }
 
         _limpaFormulario() {
@@ -81,27 +121,41 @@ System.register(['../domain/index.js', '../ui/index.js', '../util/index.js'], fu
           return new Negociacao(DateConverter.paraData(this._inputData.value), parseInt(this._inputQuantidade.value), parseFloat(this._inputValor.value));
         }
 
-        async importaNegociacoes() {
+        importaNegociacoes() {
+          var _this3 = this;
 
-          try {
-            const negociacoes = await this._service.obtemNegociacoesDoPeriodo();
-            console.log(negociacoes);
-            negociacoes.filter(novaNegociacao => !this._negociacoes.paraArray().some(negociacaoExistente => novaNegociacao.equals(negociacaoExistente))).forEach(negociacao => this._negociacoes.adiciona(negociacao));
-            this._mensagem.texto = 'Negociações do período importadas com sucesso!';
-          } catch (err) {
-            this._mensagem.texto = err.message;
-          }
+          return _asyncToGenerator(function* () {
+
+            try {
+              const negociacoes = yield _this3._service.obtemNegociacoesDoPeriodo();
+              console.log(negociacoes);
+              negociacoes.filter(function (novaNegociacao) {
+                return !_this3._negociacoes.paraArray().some(function (negociacaoExistente) {
+                  return novaNegociacao.equals(negociacaoExistente);
+                });
+              }).forEach(function (negociacao) {
+                return _this3._negociacoes.adiciona(negociacao);
+              });
+              _this3._mensagem.texto = 'Negociações do período importadas com sucesso!';
+            } catch (err) {
+              _this3._mensagem.texto = err.message;
+            }
+          })();
         }
 
-        async apaga() {
-          try {
-            const dao = await getNegociacaoDao();
-            await dao.apagaTodos();
-            this._negociacoes.esvazia();
-            this._mensagem.texto = 'Negociações apagadas com sucesso';
-          } catch (err) {
-            this._mensagem.texto = err.message;
-          }
+        apaga() {
+          var _this4 = this;
+
+          return _asyncToGenerator(function* () {
+            try {
+              const dao = yield getNegociacaoDao();
+              yield dao.apagaTodos();
+              _this4._negociacoes.esvazia();
+              _this4._mensagem.texto = 'Negociações apagadas com sucesso';
+            } catch (err) {
+              _this4._mensagem.texto = err.message;
+            }
+          })();
         }
       }
 

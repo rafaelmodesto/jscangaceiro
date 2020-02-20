@@ -1,6 +1,6 @@
 import { Negociacoes, NegociacaoService, Negociacao} from '../domain/index.js'; //'../domain/index.js';
-import { NegociacoesView, MensagemView, Mensagem, DataInvalidaException, DateConverter } from '../ui/index.js';
-import { getNegociacaoDao, Bind } from '../util/index.js';
+import { NegociacoesView, MensagemView, Mensagem, DateConverter } from '../ui/index.js';
+import { getNegociacaoDao, Bind, getExceptionMessage } from '../util/index.js';
 
 export class NegociacaoController{
 
@@ -40,7 +40,7 @@ export class NegociacaoController{
       negociacoes.forEach(negociacao => this._negociacoes.adiciona(negociacao));
     } catch(err) {
       
-        this._mensagem.texto = err.message;
+        this._mensagem.texto = getExceptionMessage(err);
     }
   }
 
