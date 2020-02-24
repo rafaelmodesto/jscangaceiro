@@ -7,7 +7,7 @@ System.register(['./ProxyFactory.js'], function (_export, _context) {
       ProxyFactory = _ProxyFactoryJs.ProxyFactory;
     }],
     execute: function () {
-      class Bind {
+      let Bind = class Bind {
         //os '...' antes do props significa que todos os parametros
         //a partir dele(props) serão considerados como fazendo parte de uma array
         constructor(model, view, ...props) {
@@ -21,7 +21,7 @@ System.register(['./ProxyFactory.js'], function (_export, _context) {
 
           return proxy;
         }
-      }
+      };
 
       _export('Bind', Bind);
     }

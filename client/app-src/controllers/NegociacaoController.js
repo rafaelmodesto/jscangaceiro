@@ -1,19 +1,14 @@
 import { Negociacoes, NegociacaoService, Negociacao} from '../domain/index.js'; //'../domain/index.js';
 import { NegociacoesView, MensagemView, Mensagem, DateConverter } from '../ui/index.js';
-import { getNegociacaoDao, Bind, getExceptionMessage } from '../util/index.js';
+import { getNegociacaoDao, Bind, getExceptionMessage, debounce, controller } from '../util/index.js';
 
+@controller('#data', '#quantidade', '#valor')
 export class NegociacaoController{
 
-  constructor() {
-    // a ideia é que $ seja o querySelector
-    // realizando o bind, $ mantém document como seu contexto this
-    const $ = document.querySelector.bind(document);  
-
-    // buscando elementos
-    this._inputData       = $('#data');
-    this._inputQuantidade = $('#quantidade');
-    this._inputValor      = $('#valor');
-
+  constructor(inputData, inputQuantidade, inputValor) {
+    
+    Object.assign(this, {_inputData, _inputQuantidade, _inputValor})
+    
     //criando o proxy com auxílio do Bind
     this._negociacoes = new Bind(
       new Negociacoes(),
@@ -44,6 +39,7 @@ export class NegociacaoController{
     }
   }
 
+  @debounce()
   async adiciona(event) {
 
     try {
@@ -77,6 +73,7 @@ export class NegociacaoController{
     );
   }
   
+  @debounce(1500)
   async importaNegociacoes() {
 
     try {

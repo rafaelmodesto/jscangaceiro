@@ -4,7 +4,7 @@ System.register([], function (_export, _context) {
   return {
     setters: [],
     execute: function () {
-      class Mensagem {
+      let Mensagem = class Mensagem {
 
         //se não for passado, será uma string em branco
         constructor(texto = '') {
@@ -18,7 +18,7 @@ System.register([], function (_export, _context) {
         set texto(texto) {
           this._texto = texto;
         }
-      }
+      };
 
       _export('Mensagem', Mensagem);
     }
