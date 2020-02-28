@@ -1,11 +1,11 @@
 import { Negociacoes, NegociacaoService, Negociacao} from '../domain/index.js'; //'../domain/index.js';
 import { NegociacoesView, MensagemView, Mensagem, DateConverter } from '../ui/index.js';
-import { getNegociacaoDao, Bind, getExceptionMessage, debounce, controller } from '../util/index.js';
+import { getNegociacaoDao, Bind, getExceptionMessage, debounce, controller, bindEvent } from '../util/index.js';
 
 @controller('#data', '#quantidade', '#valor')
 export class NegociacaoController{
 
-  constructor(inputData, inputQuantidade, inputValor) {
+  constructor(_inputData, _inputQuantidade, _inputValor) {
     
     Object.assign(this, {_inputData, _inputQuantidade, _inputValor})
     
@@ -39,6 +39,7 @@ export class NegociacaoController{
     }
   }
 
+  @bindEvent('submit', '.form')
   @debounce()
   async adiciona(event) {
 
@@ -67,12 +68,13 @@ export class NegociacaoController{
   _criaNegociacao() {
     //retorna uma instancia de nogociação
     return new Negociacao(
-      DateConverter.paraData(this._inputData.value)  ,
+      DateConverter.paraData(this._inputData.value),
       parseInt(this._inputQuantidade.value),
       parseFloat(this._inputValor.value)
     );
   }
   
+  @bindEvent('click', '#botao-importa')
   @debounce(1500)
   async importaNegociacoes() {
 
@@ -89,6 +91,7 @@ export class NegociacaoController{
     }
   }
 
+  @bindEvent('click', '#botao-apaga')
   async apaga() {
     try {
       const dao = await getNegociacaoDao();
